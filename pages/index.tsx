@@ -41,9 +41,27 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const data: IHomePageProps = JSON.parse(jsonData.toString())
 
+  if (!data) {
+    return {
+      props: {
+        redirect: {
+          destination: '/no-data'
+        }
+      }
+    }
+  }
+
+  if (data.products.length === 0) {
+    return {
+      props: {
+        noFoud: true
+      }
+    }
+  }
+
   return {
     props: {
-      products: data.products
+      products: data.products,
     },
     revalidate: 15
   }

@@ -32,13 +32,20 @@ function HomePage({ products }: IHomePageProps) {
 
 
 export const getStaticProps: GetStaticProps = async () => {
+
+  console.log(`Re-generete index page...`)
+
   const filePath = path.join(process.cwd(), 'data', 'dummy-backend.json')
+
   const jsonData = await fs.readFile(filePath)
+
   const data: IHomePageProps = JSON.parse(jsonData.toString())
+
   return {
     props: {
       products: data.products
-    }
+    },
+    revalidate: 15
   }
 }
 

@@ -7,13 +7,17 @@ import { GetStaticProps } from 'next';
 import fs from 'fs/promises'
 import path from 'path'
 
-interface IProduct {
+export interface IProduct {
   id: string,
-  title: string
+  title: string,
+  description: string
 }
 
-interface IHomePageProps {
+export interface IArrayProducts {
   products: Array<IProduct>
+}
+
+interface IHomePageProps extends IArrayProducts {
 }
 
 function HomePage({ products }: IHomePageProps) {
@@ -22,7 +26,13 @@ function HomePage({ products }: IHomePageProps) {
     <div className={styles.container}>
       <ul key={1}>
         {products.map((element) => (
-          <li key={element.id}>{element.title}</li>)
+          <div key={`${element.id}`}>
+            <Link
+              href={`/${element.id}`}
+              key={element.id}>
+              {element.title}
+            </Link>
+          </div>)
         )}
 
       </ul>
@@ -39,7 +49,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const jsonData = await fs.readFile(filePath)
 
-  const data: IHomePageProps = JSON.parse(jsonData.toString())
+  const data: IArrayProducts = JSON.parse(jsonData.toString())
 
   if (!data) {
     return {
@@ -63,7 +73,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       products: data.products,
     },
-    revalidate: 15
+    revalidate: 15 //regenrete page after 15 seconds (revalid read data again)
   }
 }
 

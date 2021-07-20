@@ -22,11 +22,13 @@ interface IStaticPathParams extends ParsedUrlQuery {
 function ProductDetailPage(
     { product }: ProductDetailsProps
 ) {
-    if (!product) {
-        return (
-            <h1>Loading ...</h1>
-        )
-    }
+
+    // if fallback is block this in no needed
+    // if (!product) {
+    //     return (
+    //         <h1>Loading ...</h1>
+    //     )
+    // }
 
     return (
         <Fragment>
@@ -67,7 +69,7 @@ export const getStaticPaths: GetStaticPaths<IStaticPathParams> = async () => {
         paths: [
             { params: { productId: 'p1' } }
         ],
-        fallback: true,
+        fallback: 'blocking',
     }
 }
 

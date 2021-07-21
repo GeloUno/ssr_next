@@ -1,58 +1,38 @@
-import React, { useEffect, useState } from 'react'
+import useSWR from 'swr';
 
 interface ISaleData {
     userName: string,
     value: number
 }
-interface ISalesData {
-    salses: Array<ISaleData>
-}
 
-
-const getData = async (): Promise<Array<ISaleData>> => {
-
-    const dataFache = await fetch('https://nextclients-default-rtdb.europe-west1.firebasedatabase.app/sales.json', {
-        method: 'GET',
-        mode: 'cors',
-        headers: new Headers({ 'Content-Type': 'application/json' })
-    });
-    const dataResponse = await dataFache.json();
+const getDataArray = (dataparam: { [key: string]: { userName: string, value: number } }) => {
 
     let data: Array<ISaleData> = [];
 
-    for (const key in dataResponse) {
-        data.push({ userName: dataResponse[key].userName, value: dataResponse[key].value })
+    for (const key in dataparam) {
+        data.push({ userName: dataparam[key].userName, value: dataparam[key].value })
     }
 
     return data;
 }
 
 function LastSalesPage() {
+    const URL = 'https://nextclients-default-rtdb.europe-west1.firebasedatabase.app/sales.json'
+    const { data, error } = useSWR(URL)
 
-    const [sales, setSales] = useState<Array<ISaleData> | null>(null)
-    const [loading, setLoading] = useState<boolean>(false)
+    if (data?.error) {
+        return (<h1>Error ...</h1>)
+    }
 
-    useEffect(() => {
-        setLoading(true)
-        getData().then(data => {
-            setSales(data);
-            setLoading(false)
-        }).catch(() => {
-            setSales(null);
-            setLoading(false)
-        }
-        );
-        return () => {
-        }
-    }, [])
-    if (loading && !sales) {
+    if (!data) {
         return (<h1>Loading ...</h1>)
     }
 
-    if (!loading && sales) {
+    if (data && !error) {
+        const dataUsers = getDataArray(data)
         return (
             <div>
-                {sales.map((element) => (
+                {dataUsers.map((element) => (
                     <div key={element.userName}>
                         <h1>{element.userName}</h1>
                         <p>{element.value}</p>

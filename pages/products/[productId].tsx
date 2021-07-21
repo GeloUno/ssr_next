@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { IProduct } from '.';
+import { IProduct } from '..';
 import { ParsedUrlQuery } from 'querystring'
 import fs from 'fs/promises';
 import path from 'path';
-import { IArrayProducts } from './index';
+import { IArrayProducts } from '../index';
 
 
 interface IContextProps {

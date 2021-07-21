@@ -28,7 +28,7 @@ function HomePage({ products }: IHomePageProps) {
         {products.map((element) => (
           <div key={`${element.id}`}>
             <Link
-              href={`/${element.id}`}
+              href={`products/${element.id}`}
               key={element.id}>
               {element.title}
             </Link>
